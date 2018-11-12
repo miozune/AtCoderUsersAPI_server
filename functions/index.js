@@ -98,8 +98,11 @@ app.get('/info/:query/:name', (req, res) => {
 
 app.get('*', (req, res) => {
     res.status(400).json({
-        "error": "Bad Request",
-        "message": errorMessage400,
+        "error": {
+            "status": 400,
+            "title": "Bad Request",
+            "detail": errorMessage400,
+        }
     });
 });
 
