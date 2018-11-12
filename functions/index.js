@@ -49,7 +49,7 @@ app.get('/info/:query/:name', (req, res) => {
     if (paths[query]) {
         // Valid Query
         db.ref(paths[query]).once('value', snapshot => {
-            res.status(200).send({
+            res.status(200).json({
                 "data": snapshot,
             });
         }, err => {
@@ -58,13 +58,13 @@ app.get('/info/:query/:name', (req, res) => {
             auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
                 .then(() => {
                     db.ref(paths[query]).once('value', snapshot => {
-                        res.status(200).send({
+                        res.status(200).json({
                             "data": snapshot,
                         });
                     }, err => {
                         console.error('Failed to get data.');
                         console.log(err);
-                        res.status(500).send({
+                        res.status(500).json({
                             "error": {
                                 "status": 500,
                                 "title": "Internal Server Error",
@@ -77,7 +77,7 @@ app.get('/info/:query/:name', (req, res) => {
                 .catch(err => {
                     console.error('Failed to sign in.');
                     console.log(err);
-                    res.status(500).send({
+                    res.status(500).json({
                         "error": {
                             "status": 500,
                             "title": "Internal Server Error",
@@ -88,7 +88,7 @@ app.get('/info/:query/:name', (req, res) => {
         });
     } else {
         // Invalid Query
-        res.status(400).send({
+        res.status(400).json({
             "error": {
                 "status": 400,
                 "title": "Bad Request",
@@ -100,7 +100,7 @@ app.get('/info/:query/:name', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-    res.status(400).send({
+    res.status(400).json({
         "error": "Bad Request",
         "message": errorMessage400,
     });
