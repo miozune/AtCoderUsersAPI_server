@@ -81,89 +81,6 @@ app.get('/info/:query/:name', (req, res) => {
                         });
                     });
             });
-            // auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
-            //     .then(() => {
-            //         db.ref(`by_username/${name}`).once('value', snapshot => {
-            //             res.status(200).send({
-            //                 "data": snapshot,
-            //             });
-            //         }, err => {
-            //             console.log(err);
-            //             res.status(500).send({
-            //                 "error": {
-            //                     "status": 500,
-            //                     "title": "Internal Server Error",
-            //                     "detail": errorMessage500,
-            //                 }
-            //             });
-            //         });
-            //         return;
-            //     })
-            //     .catch(err => {
-            //         console.log('Failed to sign in.');
-            //         console.log(err);
-            //         res.status(500).send({
-            //             "error": {
-            //                 "status": 500,
-            //                 "title": "Internal Server Error",
-            //                 "detail": errorMessage500,
-            //             }
-            //         });
-            //     });
-            // auth.currentUser.getIdToken(true)
-            //     .then()
-            //     .catch(err => {
-            //         auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD);
-            //         console.log('token refresh');
-            //         const _ = err;
-            //     })
-            //     .then(() => {
-            //         db.ref(`by_username/${name}`).once('value', snapshot => {
-            //             res.status(200).send({
-            //                 "data": snapshot,
-            //             });
-            //         }, err => {
-            //             console.log(err);
-            //             res.status(500).send({
-            //                 "error": {
-            //                     "status": 500,
-            //                     "title": "Internal Server Error",
-            //                     "detail": errorMessage500,
-            //                 }
-            //             });
-            //         });
-            //         return;
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //         res.status(500).send({
-            //             "error": {
-            //                 "status": 500,
-            //                 "title": "Internal Server Error",
-            //                 "detail": errorMessage500,
-            //             }
-            //         });
-            //     });
-            // try {
-            //     const token = await auth.currentUser.getIdToken(true);
-            // } catch (e) {
-            //     await auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD);
-            //     console.log('token refresh');
-            // }
-            // db.ref(`by_username/${name}`).once('value', snapshot => {
-            //     res.status(200).send({
-            //         "data": snapshot,
-            //     });
-            // }, error => {
-            //     console.log(error);
-            //     res.status(500).send({
-            //         "error": {
-            //             "status": 500,
-            //             "title": "Internal Server Error",
-            //             "detail": errorMessage500,
-            //         }
-            //     });
-            // });
             break;
         }
         case 'twitterID': {
@@ -205,33 +122,6 @@ app.get('/info/:query/:name', (req, res) => {
                         });
                     });
             });
-            // auth.currentUser.getIdToken(true)
-            //     .then()
-            //     .catch(err => {
-            //         auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD);
-            //         console.log('token refresh');
-            //         const _ = err;
-            //     });
-            // try {
-            //     const token = await auth.currentUser.getIdToken(true);
-            // } catch (e) {
-            //     await auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD);
-            //     console.log('token refresh');
-            // }
-            // db.ref(`by_twitter_id/${name}`).once('value', snapshot => {
-            //     res.status(200).send({
-            //         "data": snapshot,
-            //     });
-            // }, error => {
-            //     console.log(error);
-            //     res.status(500).send({
-            //         "error": {
-            //             "status": 500,
-            //             "title": "Internal Server Error",
-            //             "detail": errorMessage500,
-            //         }
-            //     });
-            // });
             break;
         }
         default: {
