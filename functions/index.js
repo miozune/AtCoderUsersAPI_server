@@ -40,37 +40,29 @@ app.get('/info/:query/:name', (req, res) => {
     const query = req.params.query;
     const name = req.params.name;
 
-    switch (query) {
-        // Googleさんasync/awaitに対応してくださいなのです
-        case 'username': {
-            db.ref(`by_username/${name}`).once('value', snapshot => {
-                res.status(200).send({
-                    "data": snapshot,
-                });
-            }, err => {
-                console.log('ReAuth');
-                const _ = err;  // Discard
-                auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
-                    .then(() => {
-                        db.ref(`by_username/${name}`).once('value', snapshot => {
-                            res.status(200).send({
-                                "data": snapshot,
-                            });
-                        }, err => {
-                            console.error('Failed to get data.');
-                            console.log(err);
-                            res.status(500).send({
-                                "error": {
-                                    "status": 500,
-                                    "title": "Internal Server Error",
-                                    "detail": errorMessage500,
-                                }
-                            });
+    const paths = {
+        "username": `by_username/${name}`,
+        "twitterID": `by_twitter_id/${name}`,
+    };
+
+    // Googleさんasync/awaitに対応してくださいなのです
+    if (paths[query]) {
+        // Valid Query
+        db.ref(paths[query]).once('value', snapshot => {
+            res.status(200).send({
+                "data": snapshot,
+            });
+        }, err => {
+            console.log('ReAuth');
+            const _ = err;  // Discard
+            auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
+                .then(() => {
+                    db.ref(paths[query]).once('value', snapshot => {
+                        res.status(200).send({
+                            "data": snapshot,
                         });
-                        return;
-                    })
-                    .catch(err => {
-                        console.error('Failed to sign in.');
+                    }, err => {
+                        console.error('Failed to get data.');
                         console.log(err);
                         res.status(500).send({
                             "error": {
@@ -80,60 +72,31 @@ app.get('/info/:query/:name', (req, res) => {
                             }
                         });
                     });
-            });
-            break;
-        }
-        case 'twitterID': {
-            db.ref(`by_twitter_id/${name}`).once('value', snapshot => {
-                res.status(200).send({
-                    "data": snapshot,
-                });
-            }, err => {
-                console.log('ReAuth');
-                const _ = err;  // Discard
-                auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
-                    .then(() => {
-                        db.ref(`by_twitter_id/${name}`).once('value', snapshot => {
-                            res.status(200).send({
-                                "data": snapshot,
-                            });
-                        }, err => {
-                            console.error('Failed to get data.');
-                            console.log(err);
-                            res.status(500).send({
-                                "error": {
-                                    "status": 500,
-                                    "title": "Internal Server Error",
-                                    "detail": errorMessage500,
-                                }
-                            });
-                        });
-                        return;
-                    })
-                    .catch(err => {
-                        console.error('Failed to sign in.');
-                        console.log(err);
-                        res.status(500).send({
-                            "error": {
-                                "status": 500,
-                                "title": "Internal Server Error",
-                                "detail": errorMessage500,
-                            }
-                        });
+                    return;
+                })
+                .catch(err => {
+                    console.error('Failed to sign in.');
+                    console.log(err);
+                    res.status(500).send({
+                        "error": {
+                            "status": 500,
+                            "title": "Internal Server Error",
+                            "detail": errorMessage500,
+                        }
                     });
-            });
-            break;
-        }
-        default: {
-            res.status(400).send({
-                "error": {
-                    "status": 400,
-                    "title": "Bad Request",
-                    "detail": errorMessage400,
-                }
-            });
-        }
+                });
+        });
+    } else {
+        // Invalid Query
+        res.status(400).send({
+            "error": {
+                "status": 400,
+                "title": "Bad Request",
+                "detail": errorMessage400,
+            }
+        });
     }
+
 });
 
 app.get('*', (req, res) => {
