@@ -23,18 +23,15 @@ auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD);
 const app = express();
 
 const errorMessage400 =
-`Using invalid URL.
-
-Usage: /api/info/[query]/[name]
-Query:
-    - username: search by username
-    - TwitterID: search by TwitterID
-Name: the name you want
-Example: "/api/info/username/tourist"`;
+'Using invalid URL. '
++ 'Usage: /api/info/[query]/[name] '
++ 'Query: --username:search by username --TwitterID:search by TwitterID '
++ 'Name: the name you want '
++ 'Example: `/api/info/username/tourist`';
 
 const errorMessage500 =
-`Error occured in server. Please report to admin.
-Twitter: @miozune, GitHub: https://github.com/miozune/AtCoderUsersAPI_server`;
+'Error occured in server. Please report to admin. '
++ 'Twitter: @miozune, GitHub: https://github.com/miozune/AtCoderUsersAPI_server';
 
 app.get('/info/:query/:name', (req, res) => {
     const query = req.params.query;
