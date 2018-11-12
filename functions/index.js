@@ -28,7 +28,7 @@ const errorMessage400 =
 Usage: /api/info/[query]/[name]
 Query:
     - username: search by username
-    - twitterID: search by twitterID
+    - TwitterID: search by TwitterID
 Name: the name you want
 Example: "/api/info/username/tourist"`;
 
@@ -42,7 +42,7 @@ app.get('/info/:query/:name', (req, res) => {
 
     const paths = {
         "username": `by_username/${name}`,
-        "twitterID": `by_twitter_id/${name}`,
+        "TwitterID": `by_twitter_id/${name}`,
     };
 
     // Googleさんasync/awaitに対応してくださいなのです
