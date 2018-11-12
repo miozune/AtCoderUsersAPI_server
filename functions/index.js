@@ -63,7 +63,7 @@ app.get('/info/:query/:name', (req, res) => {
                         });
                     }, err => {
                         console.error('Failed to get data.');
-                        console.log(err);
+                        console.error(err);
                         res.status(500).json({
                             "error": {
                                 "status": 500,
@@ -76,7 +76,7 @@ app.get('/info/:query/:name', (req, res) => {
                 })
                 .catch(err => {
                     console.error('Failed to sign in.');
-                    console.log(err);
+                    console.error(err);
                     res.status(500).json({
                         "error": {
                             "status": 500,
