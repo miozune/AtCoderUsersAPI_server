@@ -88,7 +88,7 @@ app.get('/info/:query/:name', (req, res) => {
         res.status(404).json({
             "error": {
                 "status": 404,
-                "title": "Bad Request",
+                "title": "Not Found",
                 "detail": errorMessage404,
             }
         });
@@ -100,7 +100,7 @@ app.get('*', (req, res) => {
     res.status(404).json({
         "error": {
             "status": 404,
-            "title": "Bad Request",
+            "title": "Not Found",
             "detail": errorMessage404,
         }
     });
