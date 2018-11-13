@@ -11,6 +11,10 @@
         ".read": "auth.uid === root.child('admin').val()",
         ".write": "auth.uid === root.child('admin').val()"
       }
+    },
+    "continuation": {
+      ".read": "auth.uid === root.child('admin').val()",
+      ".write": "auth.uid === root.child('admin').val()"
     }
   }
 }
