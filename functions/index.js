@@ -34,12 +34,12 @@ const errorMessage500 =
 + 'Twitter: @miozune, GitHub: https://github.com/miozune/AtCoderUsersAPI_server';
 
 app.get('/info/:query/:name', (req, res) => {
-    const query = req.params.query;
+    const query = req.params.query.toLowerCase();
     const name = req.params.name;
 
     const paths = {
         "username": `by_username/${name}`,
-        "TwitterID": `by_twitter_id/${name}`,
+        "twitterid": `by_twitter_id/${name}`,
     };
 
     // Googleさんasync/awaitに対応してくださいなのです
