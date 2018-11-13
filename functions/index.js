@@ -22,7 +22,7 @@ auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD);
 
 const app = express();
 
-const errorMessage400 =
+const errorMessage404 =
 'Using invalid URL. '
 + 'Usage: /api/info/[query]/[name] '
 + 'Query: --username:search by username --TwitterID:search by TwitterID '
@@ -85,11 +85,11 @@ app.get('/info/:query/:name', (req, res) => {
         });
     } else {
         // Invalid Query
-        res.status(400).json({
+        res.status(404).json({
             "error": {
-                "status": 400,
+                "status": 404,
                 "title": "Bad Request",
-                "detail": errorMessage400,
+                "detail": errorMessage404,
             }
         });
     }
@@ -97,11 +97,11 @@ app.get('/info/:query/:name', (req, res) => {
 });
 
 app.get('*', (req, res) => {
-    res.status(400).json({
+    res.status(404).json({
         "error": {
-            "status": 400,
+            "status": 404,
             "title": "Bad Request",
-            "detail": errorMessage400,
+            "detail": errorMessage404,
         }
     });
 });
