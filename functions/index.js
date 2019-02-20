@@ -22,6 +22,9 @@ auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD);
 
 const app = express();
 
+const errorMessage400 = 
+'Invalid request.';
+
 const errorMessage404 =
 'Using invalid URL. '
 + 'Usage: /api/info/[query]/[name] '
@@ -44,22 +47,36 @@ app.get('/info/:query/:name', (req, res) => {
 
     // Googleさんasync/awaitに対応してくださいなのです
     if (paths[query]) {
-        // Valid Query
-        db.ref(paths[query]).once('value', snapshot => {
-            res.status(200).json({
-                "data": snapshot,
-            });
-        }, err => {
-            console.log('ReAuth');
-            const _ = err;  // Discard
-            auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
-                .then(() => {
-                    db.ref(paths[query]).once('value', snapshot => {
-                        res.status(200).json({
-                            "data": snapshot,
+        if (!name.match(/[^a-zA-Z0-9_]/g)) {
+            // Valid Query
+            db.ref(paths[query]).once('value', snapshot => {
+                res.status(200).json({
+                    "data": snapshot,
+                });
+            }, err => {
+                console.log('ReAuth');
+                const _ = err;  // Discard
+                auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
+                    .then(() => {
+                        db.ref(paths[query]).once('value', snapshot => {
+                            res.status(200).json({
+                                "data": snapshot,
+                            });
+                        }, err => {
+                            console.error('Failed to get data.');
+                            console.error(err);
+                            res.status(500).json({
+                                "error": {
+                                    "status": 500,
+                                    "title": "Internal Server Error",
+                                    "detail": errorMessage500,
+                                }
+                            });
                         });
-                    }, err => {
-                        console.error('Failed to get data.');
+                        return;
+                    })
+                    .catch(err => {
+                        console.error('Failed to sign in.');
                         console.error(err);
                         res.status(500).json({
                             "error": {
@@ -69,22 +86,19 @@ app.get('/info/:query/:name', (req, res) => {
                             }
                         });
                     });
-                    return;
-                })
-                .catch(err => {
-                    console.error('Failed to sign in.');
-                    console.error(err);
-                    res.status(500).json({
-                        "error": {
-                            "status": 500,
-                            "title": "Internal Server Error",
-                            "detail": errorMessage500,
-                        }
-                    });
-                });
-        });
+            });
+        } else {
+            // Invalid Query
+            res.status(400).json({
+                "error": {
+                    "status": 400,
+                    "title": "Bad Request",
+                    "detail": errorMessage400,
+                }
+            });
+        }
     } else {
-        // Invalid Query
+        // Invalid Name
         res.status(404).json({
             "error": {
                 "status": 404,
