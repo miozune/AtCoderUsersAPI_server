@@ -36,6 +36,34 @@ const errorMessage500 =
 'Error occured in server. Please report to admin. '
 + 'Twitter: @miozune, GitHub: https://github.com/miozune/AtCoderUsersAPI_server';
 
+const response_error = (res, status_code) => {
+    if (status_code === 400) {
+        res.status(400).json({
+            "error": {
+                "status": 400,
+                "title": "Bad Request",
+                "detail": errorMessage400,
+            }
+        });
+    } else if (status_code === 404) {
+        res.status(404).json({
+            "error": {
+                "status": 404,
+                "title": "Not Found",
+                "detail": errorMessage404,
+            }
+        });
+    } else if (status_code === 500) {
+        res.status(500).json({
+            "error": {
+                "status": 500,
+                "title": "Internal Server Error",
+                "detail": errorMessage500,
+            }
+        });
+    }
+};
+
 app.get('/info/:query/:name', (req, res) => {
     const query = req.params.query.toLowerCase();
     const name = req.params.name;
@@ -65,47 +93,23 @@ app.get('/info/:query/:name', (req, res) => {
                         }, err => {
                             console.error('Failed to get data.');
                             console.error(err);
-                            res.status(500).json({
-                                "error": {
-                                    "status": 500,
-                                    "title": "Internal Server Error",
-                                    "detail": errorMessage500,
-                                }
-                            });
+                            response_error(res, 500);
                         });
                         return;
                     })
                     .catch(err => {
                         console.error('Failed to sign in.');
                         console.error(err);
-                        res.status(500).json({
-                            "error": {
-                                "status": 500,
-                                "title": "Internal Server Error",
-                                "detail": errorMessage500,
-                            }
-                        });
+                        response_error(res, 500);
                     });
             });
         } else {
-            // Invalid Query
-            res.status(400).json({
-                "error": {
-                    "status": 400,
-                    "title": "Bad Request",
-                    "detail": errorMessage400,
-                }
-            });
+            // Invalid Name
+            response_error(res, 400);
         }
     } else {
-        // Invalid Name
-        res.status(404).json({
-            "error": {
-                "status": 404,
-                "title": "Not Found",
-                "detail": errorMessage404,
-            }
-        });
+        // Invalid Query
+        response_error(res, 404);
     }
 
 });
@@ -136,49 +140,25 @@ app.get('/all/:query', (req, res) => {
                     }, err => {
                         console.error('Failed to get data.');
                         console.error(err);
-                        res.status(500).json({
-                            "error": {
-                                "status": 500,
-                                "title": "Internal Server Error",
-                                "detail": errorMessage500,
-                            }
-                        });
+                        response_error(res, 500);
                     });
                     return;
                 })
                 .catch(err => {
                     console.error('Failed to sign in.');
                     console.error(err);
-                    res.status(500).json({
-                        "error": {
-                            "status": 500,
-                            "title": "Internal Server Error",
-                            "detail": errorMessage500,
-                        }
-                    });
+                    response_error(res, 500);
                 });
         });
     } else {
         // Invalid Query
-        res.status(404).json({
-            "error": {
-                "status": 404,
-                "title": "Not Found",
-                "detail": errorMessage404,
-            }
-        });
+        response_error(res, 404);
     }
 
 });
 
 app.get('*', (req, res) => {
-    res.status(404).json({
-        "error": {
-            "status": 404,
-            "title": "Not Found",
-            "detail": errorMessage404,
-        }
-    });
+    response_error(res, 404);
 });
 
 const api = functions.https.onRequest(app);
