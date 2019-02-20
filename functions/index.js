@@ -150,7 +150,7 @@ app.get('/all/:query', (req, res) => {
             const _ = err;  // Discard
             auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
                 .then(() => {
-                    db.ref(paths[query]).once('value', snapshot => {
+                    db_ref.once('value', snapshot => {
                         res.status(200).json({
                             "data": snapshot,
                         });
