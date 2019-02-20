@@ -4,13 +4,17 @@
       "$key": {
         ".read": "auth.uid === root.child('admin').val()",
         ".write": "auth.uid === root.child('admin').val()"
-      }
+      },
+      ".read": "auth.uid === root.child('admin').val()",
+      ".write": "auth.uid === root.child('admin').val()"
     },
     "by_twitter_id": {
       "$key": {
         ".read": "auth.uid === root.child('admin').val()",
         ".write": "auth.uid === root.child('admin').val()"
-      }
+      },
+      ".read": "auth.uid === root.child('admin').val()",
+      ".write": "auth.uid === root.child('admin').val()"
     },
     "continuation": {
       ".read": "auth.uid === root.child('admin').val()",

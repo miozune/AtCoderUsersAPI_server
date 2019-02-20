@@ -96,6 +96,67 @@ app.get('/info/:query/:name', (req, res) => {
 
 });
 
+app.get('/all/:query', (req, res) => {
+    const query = req.params.query.toLowerCase();
+
+    const paths = {
+        "username": `by_username`,
+        "twitterid": `by_twitter_id`,
+    };
+
+    if (paths[query]) {
+        // Valid Query
+        db.ref(paths[query]).once('value', snapshot => {
+            res.status(200).json({
+                "data": snapshot,
+            });
+        }, err => {
+            console.log('ReAuth');
+            const _ = err;  // Discard
+            auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
+                .then(() => {
+                    db.ref(paths[query]).once('value', snapshot => {
+                        res.status(200).json({
+                            "data": snapshot,
+                        });
+                    }, err => {
+                        console.error('Failed to get data.');
+                        console.error(err);
+                        res.status(500).json({
+                            "error": {
+                                "status": 500,
+                                "title": "Internal Server Error",
+                                "detail": errorMessage500,
+                            }
+                        });
+                    });
+                    return;
+                })
+                .catch(err => {
+                    console.error('Failed to sign in.');
+                    console.error(err);
+                    res.status(500).json({
+                        "error": {
+                            "status": 500,
+                            "title": "Internal Server Error",
+                            "detail": errorMessage500,
+                        }
+                    });
+                });
+        });
+    } else {
+        // Invalid Query
+        res.status(404).json({
+            "error": {
+                "status": 404,
+                "title": "Not Found",
+                "detail": errorMessage404,
+            }
+        });
+    }
+
+});
+
 app.get('*', (req, res) => {
     res.status(404).json({
         "error": {
