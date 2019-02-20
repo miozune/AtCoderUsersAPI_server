@@ -64,6 +64,7 @@ const response_error = (res, status_code) => {
     }
 };
 
+
 app.get('/info/:query/:name', (req, res) => {
     const query = req.params.query.toLowerCase();
     const name = req.params.name;
@@ -116,6 +117,7 @@ app.get('/info/:query/:name', (req, res) => {
 
 app.get('/all/:query', (req, res) => {
     const query = req.params.query.toLowerCase();
+    const methods = req.query;
 
     const paths = {
         "username": `by_username`,
@@ -124,7 +126,22 @@ app.get('/all/:query', (req, res) => {
 
     if (paths[query]) {
         // Valid Query
-        db.ref(paths[query]).once('value', snapshot => {
+        let db_ref = db.ref(paths[query]);
+        if (Object.keys(methods).length > 1) {
+            response_error(res, 400);
+        } else {
+            for (const status of ['rank', 'birth_year', 'rating', 'highest_rating', 'competitions', 'wins']) {
+                if (methods[status]) {
+                    db_ref = db_ref.orderByChild(status);
+                    if (Number(methods[status]['start'])) db_ref = db_ref.startAt(Number(methods[status]['start']));
+                    if (Number(methods[status]['end'])) db_ref = db_ref.endAt(Number(methods[status]['end']));
+                }
+            }
+            for (const status of ['country', 'formal_country_name', 'crown', 'user_color', 'affiliation']) {
+                if (methods[status]) db_ref = db_ref.orderByChild(status).equalTo(methods[status]);
+            }
+        }
+        db_ref.once('value', snapshot => {
             res.status(200).json({
                 "data": snapshot,
             });
@@ -160,6 +177,7 @@ app.get('/all/:query', (req, res) => {
 app.get('*', (req, res) => {
     response_error(res, 404);
 });
+
 
 const api = functions.https.onRequest(app);
 module.exports = { api };
