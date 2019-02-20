@@ -6,7 +6,11 @@
         ".write": "auth.uid === root.child('admin').val()"
       },
       ".read": "auth.uid === root.child('admin').val()",
-      ".write": "auth.uid === root.child('admin').val()"
+      ".write": "auth.uid === root.child('admin').val()",
+      ".indexOn": [
+        "rank", "birth_year", "rating", "highest_rating", "competitions", "wins",
+        "country", "formal_country_name", "crown", "user_color", "affiliation"
+      ]
     },
     "by_twitter_id": {
       "$key": {
@@ -14,7 +18,11 @@
         ".write": "auth.uid === root.child('admin').val()"
       },
       ".read": "auth.uid === root.child('admin').val()",
-      ".write": "auth.uid === root.child('admin').val()"
+      ".write": "auth.uid === root.child('admin').val()",
+      ".indexOn": [
+        "rank", "birth_year", "rating", "highest_rating", "competitions", "wins",
+        "country", "formal_country_name", "crown", "user_color", "affiliation"
+      ]
     },
     "continuation": {
       ".read": "auth.uid === root.child('admin').val()",
