@@ -1,3 +1,4 @@
+const cors = require('cors');
 const firebase = require("firebase");
 const functions = require('firebase-functions');
 const express = require("express");
@@ -21,6 +22,7 @@ auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD);
 
 
 const app = express();
+app.use(cors());
 
 const errorMessage400 = 
 'Invalid request.';
