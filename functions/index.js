@@ -1,8 +1,8 @@
-const cors = require('cors');
+const cors = require("cors");
 const firebase = require("firebase");
-const functions = require('firebase-functions');
+const functions = require("firebase-functions");
 const express = require("express");
-require('dotenv').config();
+require("dotenv").config();
 
 const LOGIN_EMAIL = process.env.LOGIN_EMAIL;
 const LOGIN_PASSWORD = process.env.LOGIN_PASSWORD;
@@ -25,18 +25,18 @@ const app = express();
 app.use(cors());
 
 const errorMessage400 = 
-'Invalid request.';
+"Invalid request.";
 
 const errorMessage404 =
-'Using invalid URL. '
-+ 'Usage: /api/info/[query]/[name] '
-+ 'Query: --username:search by username --TwitterID:search by TwitterID '
-+ 'Name: the name you want '
-+ 'Example: `/api/info/username/tourist`';
+"Using invalid URL. "
++ "Usage: /api/info/[query]/[name] "
++ "Query: --username:search by username --TwitterID:search by TwitterID "
++ "Name: the name you want "
++ "Example: `/api/info/username/tourist`";
 
 const errorMessage500 =
-'Error occured in server. Please report to admin. '
-+ 'Twitter: @miozune, GitHub: https://github.com/miozune/AtCoderUsersAPI_server';
+"Error occured in server. Please report to admin. "
++ "Twitter: @miozune, GitHub: https://github.com/miozune/AtCoderUsersAPI_server";
 
 const response_error = (res, status_code) => {
     if (status_code === 400) {
@@ -67,7 +67,7 @@ const response_error = (res, status_code) => {
 };
 
 
-app.get('/info/:query/:name', (req, res) => {
+app.get("/info/:query/:name", (req, res) => {
     const query = req.params.query.toLowerCase();
     const name = req.params.name;
 
@@ -76,32 +76,31 @@ app.get('/info/:query/:name', (req, res) => {
         "twitterid": `by_twitter_id/${name}`,
     };
 
-    // Googleさんasync/awaitに対応してくださいなのです
     if (paths[query]) {
         if (!name.match(/[^a-zA-Z0-9_]/g)) {
             // Valid Query
-            db.ref(paths[query]).once('value', snapshot => {
+            db.ref(paths[query]).once("value", snapshot => {
                 res.status(200).json({
                     "data": snapshot,
                 });
             }, err => {
-                console.log('ReAuth');
+                console.log("ReAuth");
                 const _ = err;  // Discard
                 auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
                     .then(() => {
-                        db.ref(paths[query]).once('value', snapshot => {
+                        db.ref(paths[query]).once("value", snapshot => {
                             res.status(200).json({
                                 "data": snapshot,
                             });
                         }, err => {
-                            console.error('Failed to get data.');
+                            console.error("Failed to get data.");
                             console.error(err);
                             response_error(res, 500);
                         });
                         return;
                     })
                     .catch(err => {
-                        console.error('Failed to sign in.');
+                        console.error("Failed to sign in.");
                         console.error(err);
                         response_error(res, 500);
                     });
@@ -117,7 +116,7 @@ app.get('/info/:query/:name', (req, res) => {
 
 });
 
-app.get('/all/:query', (req, res) => {
+app.get("/all/:query", (req, res) => {
     const query = req.params.query.toLowerCase();
     const methods = req.query;
 
@@ -132,39 +131,39 @@ app.get('/all/:query', (req, res) => {
         if (Object.keys(methods).length > 1) {
             response_error(res, 400);
         } else {
-            for (const status of ['rank', 'birth_year', 'rating', 'highest_rating', 'competitions', 'wins']) {
+            for (const status of ["rank", "birth_year", "rating", "highest_rating", "competitions", "wins"]) {
                 if (methods[status]) {
                     db_ref = db_ref.orderByChild(status);
-                    if (Number(methods[status]['start'])) db_ref = db_ref.startAt(Number(methods[status]['start']));
-                    if (Number(methods[status]['end'])) db_ref = db_ref.endAt(Number(methods[status]['end']));
+                    if (Number(methods[status]["start"])) db_ref = db_ref.startAt(Number(methods[status]["start"]));
+                    if (Number(methods[status]["end"])) db_ref = db_ref.endAt(Number(methods[status]["end"]));
                 }
             }
-            for (const status of ['country', 'formal_country_name', 'crown', 'user_color', 'affiliation']) {
+            for (const status of ["country", "formal_country_name", "crown", "user_color", "affiliation"]) {
                 if (methods[status]) db_ref = db_ref.orderByChild(status).equalTo(methods[status]);
             }
         }
-        db_ref.once('value', snapshot => {
+        db_ref.once("value", snapshot => {
             res.status(200).json({
                 "data": snapshot,
             });
         }, err => {
-            console.log('ReAuth');
+            console.log("ReAuth");
             const _ = err;  // Discard
             auth.signInWithEmailAndPassword(LOGIN_EMAIL, LOGIN_PASSWORD)
                 .then(() => {
-                    db_ref.once('value', snapshot => {
+                    db_ref.once("value", snapshot => {
                         res.status(200).json({
                             "data": snapshot,
                         });
                     }, err => {
-                        console.error('Failed to get data.');
+                        console.error("Failed to get data.");
                         console.error(err);
                         response_error(res, 500);
                     });
                     return;
                 })
                 .catch(err => {
-                    console.error('Failed to sign in.');
+                    console.error("Failed to sign in.");
                     console.error(err);
                     response_error(res, 500);
                 });
@@ -176,7 +175,7 @@ app.get('/all/:query', (req, res) => {
 
 });
 
-app.get('*', (req, res) => {
+app.get("*", (req, res) => {
     response_error(res, 404);
 });
 
